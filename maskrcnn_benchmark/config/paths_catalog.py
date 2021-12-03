@@ -147,6 +147,20 @@ class DatasetCatalog(object):
             "mode": "mask",
             "mini": 10,
         },
+
+        ##############################################
+        "sartorius_train": {
+            "img_dir": "sartorius",
+            "ann_file": "sartorius/coco_format/annotations_train.json",
+            "mode": "mask",
+        },
+        "sartorius_valid": {
+            "img_dir": "sartorius",
+            "ann_file": "sartorius/coco_format/annotations_val.json",
+            "mode": "mask",
+        },
+
+
     }
 
     @staticmethod
@@ -179,6 +193,20 @@ class DatasetCatalog(object):
             attrs["img_dir"] = os.path.join(data_dir, attrs["img_dir"])
             attrs["ann_dir"] = os.path.join(data_dir, attrs["ann_dir"])
             return dict(factory="CityScapesDataset", args=attrs)
+
+        elif "sartorius" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                root=os.path.join(data_dir, attrs["img_dir"]),
+                ann_file=os.path.join(data_dir, attrs["ann_file"]),
+            )
+            return dict(
+                factory="SartoriusDataset",
+                args=args,
+            )
+    
+
         raise RuntimeError("Dataset not available: {}".format(name))
 
 
